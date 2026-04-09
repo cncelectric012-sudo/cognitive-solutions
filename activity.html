@@ -501,6 +501,7 @@ button,input,select,textarea{font-family:inherit;border:none;outline:none;font-s
     <div style="font-size:12px;font-weight:800;color:var(--G5);margin-bottom:6px">💰 Deductions</div>
     <div id="my-ded-rows"></div>
     <div style="display:flex;justify-content:space-between;padding:8px 0;border-top:2px solid var(--G8);margin-top:4px"><span style="font-size:13px;font-weight:800">Total Deduction</span><span style="font-size:15px;font-weight:800;color:var(--R)" id="my-ded-total">Rs 0</span></div>
+    <div style="margin-top:8px"><button class="jbtn jbtn-ghost" onclick="App.resetMyData()" style="width:100%;font-size:11px;padding:6px;background:#fee;color:#c00;border:1px solid #f88">🔄 Reset to Zero Deductions</button></div>
   </div>
   <!-- Attendance list -->
   <div id="my-att-list"></div>
@@ -699,7 +700,7 @@ button,input,select,textarea{font-family:inherit;border:none;outline:none;font-s
 var APP_VERSION={ver:'V16.1',date:'16-Mar-2026',time:'03:30 PKT',build:'Cs_Activity.html'};
 
 var C={
-  DB:'https://cs-activity-e32b0-default-rtdb.asia-southeast1.firebasedatabase.app/',
+  DB:'https://cs-activity-e32b0-default-rtdb.asia-southeast1.firebasedatabase.app',
   ADMIN_U:'admin',ADMIN_N:'Muddasir',
   MAX_PH:5,PH_KB:200,KM_RATE:6.5,DED_LATE:200,DED_ABSENT:500,
   OFFICES:[
@@ -719,10 +720,11 @@ var C={
    ═══════════════════════════════════════ */
 var F={
   r:function(m,p,d){return new Promise(function(ok,no){
-    var x=new XMLHttpRequest();x.open(m,C.DB+'/'+p+'.json',true);
+    var url = C.DB.replace(/\/+$/,'') + '/' + p + '.json';
+    var x=new XMLHttpRequest();x.open(m, url, true);
     x.setRequestHeader('Content-Type','application/json');
     x.onload=function(){if(x.status>=200&&x.status<300){try{ok(JSON.parse(x.responseText))}catch(e){ok(null)}}else no(new Error('HTTP '+x.status))};
-    x.onerror=function(){no(new Error('Network'))};
+    x.onerror=function(){console.error('Firebase request failed', url, m, d);no(new Error('Network'))};
     x.send(d!==undefined?JSON.stringify(d):null)})},
   g:function(p){return this.r('GET',p)},
   push:function(p,d){return this.r('POST',p,d).then(function(r){return r?r.name:null})},
@@ -869,6 +871,34 @@ nav:function(pg,btn){
   if(pg==='summary') this.loadSummary('week');
   if(pg==='attend') this.loadMyAtt('week');
   if(pg==='visits') this.loadMyVisits('week');
+},
+
+/* ── Reset Employee Data (Zero deductions) ── */
+resetMyData:async function(){
+  if(!confirm('⚠️ This will DELETE all your attendance and activity reports!\n\nDeductions will be reset to zero.\n\nThis action CANNOT be undone.\n\nContinue?')){return}
+  if(!confirm('🔴 FINAL WARNING: All your data will be permanently deleted!\n\nClick OK only if you are absolutely sure.')){return}
+  showLoad('Resetting','Clearing all your records...');
+  try{
+    /* Delete all user's attendance records */
+    var myAtt=(_att||[]).filter(function(a){return a.userId===ME.id});
+    for(var i=0;i<myAtt.length;i++){
+      await F.del('attendance/'+myAtt[i].id);
+    }
+    /* Delete all user's reports */
+    var myRpts=(_rpts||[]).filter(function(r){return r.userId===ME.id});
+    for(var i=0;i<myRpts.length;i++){
+      await F.del('reports/'+myRpts[i].id);
+    }
+    /* Reload data */
+    _att=F.arr(await F.g('attendance'));
+    _rpts=F.arr(await F.g('reports'));
+    hideLoad();
+    U.toast('✅ All records cleared! Deductions reset to zero.','ok');
+    S.p('ok');
+    /* Reload stats */
+    this.loadStats();
+    this.loadMyAtt('month');
+  }catch(e){hideLoad();U.toast('Error resetting data','err')}
 },
 
 /* ── Journey state ── */
