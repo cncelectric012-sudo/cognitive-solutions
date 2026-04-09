@@ -4673,6 +4673,7 @@
                 <option value="Sales">Sales</option>
                 <option value="C-Solar">C-Solar</option>
                 <option value="CNC Social Media">CNC Social Media</option>
+                <option value="FICO">FICO</option>
                 <option value="Finance">Finance</option>
                 <option value="Admin">Admin</option>
                 <option value="Shop">Shop</option>
@@ -4731,6 +4732,7 @@
           <button class="adm-chip" onclick="App.filterStaffByDept('Sales',this)">Sales</button>
           <button class="adm-chip" onclick="App.filterStaffByDept('C-Solar',this)">C-Solar</button>
           <button class="adm-chip" onclick="App.filterStaffByDept('CNC Social Media',this)">CNC SM</button>
+          <button class="adm-chip" onclick="App.filterStaffByDept('FICO',this)">FICO</button>
           <button class="adm-chip" onclick="App.filterStaffByDept('Finance',this)">Finance</button>
           <button class="adm-chip" onclick="App.filterStaffByDept('Admin',this)">Admin</button>
           <button class="adm-chip" onclick="App.filterStaffByDept('Shop',this)">Shop</button>
@@ -4823,6 +4825,7 @@
               onclick="App.aaDept('Sales',this)">Sales</button><button class="adm-chip"
               onclick="App.aaDept('C-Solar',this)">C-Solar</button><button class="adm-chip"
               onclick="App.aaDept('CNC Social Media',this)">CNC SM</button><button class="adm-chip"
+              onclick="App.aaDept('FICO',this)">FICO</button><button class="adm-chip"
               onclick="App.aaDept('Finance',this)">Finance</button><button class="adm-chip"
               onclick="App.aaDept('Shop',this)">Shop</button><button class="adm-chip"
               onclick="App.aaDept('Store',this)">Store</button><button class="adm-chip"
@@ -5567,8 +5570,8 @@
       ini: function (n) { return (n || '').split(' ').map(function (w) { return w[0] }).join('').slice(0, 2).toUpperCase() || '?' },
       toast: function (m, t) { var e = document.createElement('div'); e.className = 'toast t-' + (t || 'info'); e.textContent = m; document.getElementById('toasts').appendChild(e); setTimeout(function () { e.remove() }, 2800) },
       today: function () { return new Date().toISOString().slice(0, 10) },
-      dedCutoff: function () {/* Exclude today until 5 PM when workday ends */
-        var n = new Date(); if (n.getHours() < 17) { n.setDate(n.getDate() - 1) }
+      dedCutoff: function () {/* Exclude today completely - deductions start from tomorrow */
+        var n = new Date(); n.setDate(n.getDate() - 1);
         return n.getFullYear() + '-' + String(n.getMonth() + 1).padStart(2, '0') + '-' + String(n.getDate()).padStart(2, '0')
       },
       time: function () { return new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) },
@@ -6806,7 +6809,7 @@
       },
       editEmpSalary: function (uid, name, curSal, curDept) {
         /* Build modal - includes Name editing */
-        var deptOpts = ['Sales', 'C-Solar', 'CNC Social Media', 'Finance', 'Admin', 'Shop', 'Store', 'Karachi', 'Other'];
+        var deptOpts = ['Sales', 'C-Solar', 'CNC Social Media', 'FICO', 'Finance', 'Admin', 'Shop', 'Store', 'Karachi', 'Other'];
         var h = '<div id="edit-emp-ov" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999;display:flex;align-items:center;justify-content:center;padding:16px" onclick="if(event.target===this)this.remove()">';
         h += '<div style="background:var(--W);border-radius:16px;width:100%;max-width:380px;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.3)">';
         h += '<div style="font-size:16px;font-weight:800;margin-bottom:16px">✏️ Edit Employee</div>';
