@@ -4489,6 +4489,10 @@
         <div class="bn-l">Activity</div><span id="notif-badge"
           style="display:none;position:absolute;top:4px;right:8px;background:var(--R);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:10px;min-width:16px;text-align:center;border:2px solid var(--W)">0</span>
       </div>
+      <div class="bn" onclick="App.anav('act-details')">
+        <div class="bn-i">📋</div>
+        <div class="bn-l">Act Details</div>
+      </div>
       <div class="bn" onclick="App.anav('vis')">
         <div class="bn-i">📍</div>
         <div class="bn-l">Visits</div>
@@ -5091,12 +5095,23 @@
       </div>
       <!-- Download & Action Section -->
       <div style="background:linear-gradient(135deg,#f8f8f8,#ffffff);border:2px solid var(--G8);border-radius:10px;padding:12px;margin-bottom:10px">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
           <div style="font-weight:600;color:var(--G4);font-size:11px">🎯 View & Download Activities</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
             <button class="btn btn-R btn-sm" onclick="App.loadAdmRpts()" style="background:#b91c1c;padding:6px 10px;font-size:11px;font-weight:600">🔄 Refresh Data</button>
             <button class="btn btn-R btn-sm" onclick="App.dlAdmRptPdf()" style="background:#dc2626;padding:6px 10px;font-size:11px;font-weight:600">⬇️ Download PDF</button>
             <button class="btn btn-sm" style="background:var(--grn);color:white;border:none;padding:6px 10px;font-size:11px;font-weight:600;border-radius:6px;cursor:pointer" onclick="App.dlAdmRptExcel()">⬇️ Download Excel</button>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--G8);padding-top:10px">
+          <div style="font-size:10px;font-weight:600;color:var(--G5);margin-bottom:6px">📥 One-Click Period Export:</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px">
+            <button onclick="App.dlAdmRptByPeriod('week','pdf')" style="background:linear-gradient(135deg,#f59e0b,#f97316);color:white;border:none;padding:7px 10px;font-size:10px;font-weight:600;border-radius:6px;cursor:pointer;transition:0.3s">📊 Week PDF</button>
+            <button onclick="App.dlAdmRptByPeriod('week','excel')" style="background:linear-gradient(135deg,#34d399,#10b981);color:white;border:none;padding:7px 10px;font-size:10px;font-weight:600;border-radius:6px;cursor:pointer;transition:0.3s">📊 Week Excel</button>
+            <button onclick="App.dlAdmRptByPeriod('month','pdf')" style="background:linear-gradient(135deg,#f59e0b,#f97316);color:white;border:none;padding:7px 10px;font-size:10px;font-weight:600;border-radius:6px;cursor:pointer;transition:0.3s">📊 Month PDF</button>
+            <button onclick="App.dlAdmRptByPeriod('month','excel')" style="background:linear-gradient(135deg,#34d399,#10b981);color:white;border:none;padding:7px 10px;font-size:10px;font-weight:600;border-radius:6px;cursor:pointer;transition:0.3s">📊 Month Excel</button>
+            <button onclick="App.dlAdmRptByPeriod('lastmonth','pdf')" style="background:linear-gradient(135deg,#f59e0b,#f97316);color:white;border:none;padding:7px 10px;font-size:10px;font-weight:600;border-radius:6px;cursor:pointer;transition:0.3s">📊 Last Mo PDF</button>
+            <button onclick="App.dlAdmRptByPeriod('lastmonth','excel')" style="background:linear-gradient(135deg,#34d399,#10b981);color:white;border:none;padding:7px 10px;font-size:10px;font-weight:600;border-radius:6px;cursor:pointer;transition:0.3s">📊 Last Mo Excel</button>
           </div>
         </div>
       </div>
@@ -5152,6 +5167,106 @@
       <button class="btn btn-ghost" id="ar-more" style="display:none;width:100%;margin-top:8px"
         onclick="App.moreAdmRpts()">Load More ↓</button>
     </div>
+
+    <!-- Activity Details Report -->
+    <div id="ap-act-details" class="pg">
+      <div class="adm-filter">
+        <h4>📋 Activity Details Report</h4>
+        <div class="adm-frow">
+          <div class="adm-fg"><span class="adm-fl">Employee</span><select class="adm-fi" id="ad-emp"
+              onchange="App.loadActDetails()"></select></div>
+        </div>
+        <div style="background:var(--G8bg);border:1px solid var(--G8);border-radius:8px;padding:8px;margin-bottom:8px">
+          <div style="font-size:10px;font-weight:600;color:var(--G5);margin-bottom:4px">📅 Select Time Period:</div>
+          <div class="adm-frow">
+            <div class="adm-fg"><span class="adm-fl">From</span><input type="date" class="adm-fi" id="ad-from"
+                onchange="App.loadActDetails()" style="font-size:11px"></div>
+            <div class="adm-fg"><span class="adm-fl">To</span><input type="date" class="adm-fi" id="ad-to"
+                onchange="App.loadActDetails()" style="font-size:11px"></div>
+          </div>
+          <div style="margin-top:6px">
+            <div style="font-size:9px;color:var(--G5);margin-bottom:4px">Quick Select:</div>
+            <div class="adm-chips" id="ad-chips"><button class="adm-chip"
+                onclick="App.aqsel('ad','today',this)" style="font-size:10px">Today</button><button class="adm-chip"
+                onclick="App.aqsel('ad','week',this)" style="font-size:10px">This Week</button><button class="adm-chip on"
+                onclick="App.aqsel('ad','month',this)" style="font-size:10px">This Month</button><button class="adm-chip"
+                onclick="App.aqsel('ad','lastmonth',this)" style="font-size:10px">Last Month</button></div>
+          </div>
+        </div>
+        <div class="adm-frow" style="margin-top:6px">
+          <div class="adm-fg"><span class="adm-fl">Search</span><input class="adm-fi" id="ad-q"
+              placeholder="Search activities..." oninput="App.filterActDetails()"></div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">
+        <div class="stat">
+          <div class="stat-n" id="ad-tot">-</div>
+          <div class="stat-l">Total Activities</div>
+        </div>
+        <div class="stat" style="border-top:3px solid var(--amb)">
+          <div class="stat-n" style="color:var(--amb)" id="ad-late">-</div>
+          <div class="stat-l">Late Submissions</div>
+        </div>
+        <div class="stat" style="border-top:3px solid var(--grn)">
+          <div class="stat-n" style="color:var(--grn)" id="ad-unique-emp">-</div>
+          <div class="stat-l">Employees</div>
+        </div>
+        <div class="stat" style="border-top:3px solid var(--blu)">
+          <div class="stat-n" style="color:var(--blu)" id="ad-tags-count">-</div>
+          <div class="stat-l">Activity Types</div>
+        </div>
+      </div>
+
+      <!-- Download Section -->
+      <div style="background:linear-gradient(135deg,#f8f8f8,#ffffff);border:2px solid var(--G8);border-radius:10px;padding:12px;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+          <div style="font-weight:600;color:var(--G4);font-size:11px">📥 Download Activity Details</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn btn-R btn-sm" onclick="App.loadActDetails()" style="background:#b91c1c;padding:6px 10px;font-size:11px;font-weight:600">🔄 Refresh</button>
+            <button class="btn btn-R btn-sm" onclick="App.dlActDetailsPdf()" style="background:#dc2626;padding:6px 10px;font-size:11px;font-weight:600">📄 PDF Report</button>
+            <button class="btn btn-sm" style="background:var(--grn);color:white;border:none;padding:6px 10px;font-size:11px;font-weight:600;border-radius:6px;cursor:pointer" onclick="App.dlActDetailsExcel()">📊 Excel Report</button>
+            <button class="btn btn-sm" style="background:#8b5cf6;color:white;border:none;padding:6px 10px;font-size:11px;font-weight:600;border-radius:6px;cursor:pointer" onclick="App.dlActDetailsCSV()">📋 CSV Export</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Table/Cards -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-size:11px;font-weight:600;color:var(--G5)" id="ad-showing">—</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;font-size:10px">
+          <span id="ad-view-mode" style="color:var(--G5)">View: Table</span>
+        </div>
+      </div>
+
+      <!-- Activity Details Table -->
+      <div id="ad-table-wrap" style="overflow-x:auto;border:1px solid var(--G8);border-radius:8px;background:var(--W)">
+        <table id="ad-table" style="width:100%;border-collapse:collapse;font-size:11px">
+          <thead style="background:var(--G8bg);border-bottom:2px solid var(--G8)">
+            <tr>
+              <th style="padding:10px;text-align:left;font-weight:600;color:var(--G3);border-right:1px solid var(--G8)">Date</th>
+              <th style="padding:10px;text-align:left;font-weight:600;color:var(--G3);border-right:1px solid var(--G8)">Time</th>
+              <th style="padding:10px;text-align:left;font-weight:600;color:var(--G3);border-right:1px solid var(--G8)">Employee</th>
+              <th style="padding:10px;text-align:left;font-weight:600;color:var(--G3);border-right:1px solid var(--G8)">Activity</th>
+              <th style="padding:10px;text-align:left;font-weight:600;color:var(--G3);border-right:1px solid var(--G8)">Type/Tags</th>
+              <th style="padding:10px;text-align:left;font-weight:600;color:var(--G3)">Status</th>
+            </tr>
+          </thead>
+          <tbody id="ad-tbody">
+            <tr style="text-align:center;padding:20px;color:var(--G5)">
+              <td colspan="6" style="padding:20px">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="ad-empty" class="adm-empty" style="display:none;margin-top:10px">No activity details found.</div>
+
+      <!-- Pagination -->
+      <button class="btn btn-ghost" id="ad-more" style="display:none;width:100%;margin-top:8px"
+        onclick="App.moreActDetails()">Load More ↓</button>
+    </div>
+
     <div id="ap-vis" class="pg">
       <div class="adm-filter">
         <h4>Field Visits (from Visit Tracker)</h4>
@@ -5746,12 +5861,13 @@
         S.p('nav'); document.querySelectorAll('#s-admin .pg').forEach(function (x) { x.classList.remove('on') }); document.getElementById('ap-' + p).classList.add('on');
         if (p === 'att') { App.initAttendTab().then(function () { if (_admInited && !_admAttRows.length) App.loadAdmAtt() }) }
         if (p === 'rpts') { if (_admInited) App.loadAdmRpts(); }
+        if (p === 'act-details') { if (_admInited) App.loadActDetails(); }
         if (p === 'vis' && _admInited && !_admVisRows.length) App.loadAdmVis();
         if (p === 'plan') App.loadAdmPlans();
         if (p === 'cal') App.initAdmCalDd();
         if (p === 'sum') App.initAdmSumDd();
         if (p === 'appr') { App.initAdmApprDd(); App.loadAIConfig() }
-        document.querySelectorAll('#s-admin .bn').forEach(function (b) { b.classList.remove('on') }); var m = { dash: 0, att: 1, rpts: 2, vis: 3, plan: 4, cal: 5, sum: 6, instr: 7, appr: 8, staff: 9 }; if (document.querySelectorAll('#s-admin .bn')[m[p]]) document.querySelectorAll('#s-admin .bn')[m[p]].classList.add('on');/* Scroll content area to top on tab switch */var ctEl = document.querySelector('#s-admin .ct'); if (ctEl) { ctEl.scrollTop = 0; ctEl.display = 'none'; setTimeout(function () { ctEl.style.display = '' }, 300) }
+        document.querySelectorAll('#s-admin .bn').forEach(function (b) { b.classList.remove('on') }); var m = { dash: 0, att: 1, rpts: 2, 'act-details': 3, vis: 4, plan: 5, cal: 6, sum: 7, instr: 8, appr: 9, staff: 10 }; if (document.querySelectorAll('#s-admin .bn')[m[p]]) document.querySelectorAll('#s-admin .bn')[m[p]].classList.add('on');/* Scroll content area to top on tab switch */var ctEl = document.querySelector('#s-admin .ct'); if (ctEl) { ctEl.scrollTop = 0; ctEl.display = 'none'; setTimeout(function () { ctEl.style.display = '' }, 300) }
         if (p === 'dash') this.loadDash(); if (p === 'staff') this.loadStaff(); if (p === 'rpts') { this._ar = []; this.aR(); this.popFil() } if (p === 'instr') { this.popIns(); this.loadILog() }
       },
       checkAtt: async function () {
@@ -6911,7 +7027,7 @@
     App.initAdmFilters = async function () {
       try {
         var users = F.arr(await F.g('users')).filter(function (u) { return u.approved === true && u.blocked !== true });
-        ['aa-emp', 'ar-emp', 'av-emp', 'apl-emp'].forEach(function (id) {
+        ['aa-emp', 'ar-emp', 'av-emp', 'apl-emp', 'ad-emp'].forEach(function (id) {
           var sel = document.getElementById(id); if (!sel) return; sel.innerHTML = '<option value="all">All Employees</option>';
           users.forEach(function (u) { var o = document.createElement('option'); o.value = u.id; o.textContent = u.name || u.username; sel.appendChild(o) })
         });
@@ -6924,19 +7040,36 @@
         /* Attendance defaults to TODAY for fast loading */
         document.getElementById('aa-from').value = ds(now); document.getElementById('aa-to').value = ds(now);
         /* Others default to this month */
-        ['ar', 'av'].forEach(function (p) { document.getElementById(p + '-from').value = ds(first); document.getElementById(p + '-to').value = ds(now) });
+        ['ar', 'av', 'ad'].forEach(function (p) { document.getElementById(p + '-from').value = ds(first); document.getElementById(p + '-to').value = ds(now) });
       } catch (e) { console.error('initAdmFilters:', e) }
     };
 
     App.aqsel = function (prefix, period, btn) {
       var now = new Date(), from, to = new Date();
-      if (period === 'today') { from = new Date(now) }
-      else if (period === 'week') { from = new Date(now); from.setDate(now.getDate() - now.getDay()) }
-      else if (period === 'month') { from = new Date(now.getFullYear(), now.getMonth(), 1) }
-      else if (period === 'lastmonth') { from = new Date(now.getFullYear(), now.getMonth() - 1, 1); to = new Date(now.getFullYear(), now.getMonth(), 0) }
+      if (period === 'today') {
+        from = new Date(now);
+      }
+      else if (period === 'week') {
+        from = new Date(now);
+        var dayOfWeek = now.getDay();
+        // Monday = 1, Sunday = 0. To get Monday of current week:
+        // If Sunday (0), go back 6 days; if Monday (1), go back 0 days; etc.
+        var daysToMonday = dayOfWeek === 0 ? 6 : (dayOfWeek - 1);
+        from.setDate(now.getDate() - daysToMonday);
+      }
+      else if (period === 'month') {
+        from = new Date(now.getFullYear(), now.getMonth(), 1);
+      }
+      else if (period === 'lastmonth') {
+        from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        to = new Date(now.getFullYear(), now.getMonth(), 0);
+      }
       var ds = function (d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') };
-      document.getElementById(prefix + '-from').value = ds(from); document.getElementById(prefix + '-to').value = ds(to);
-      btn.parentElement.querySelectorAll('.adm-chip').forEach(function (c) { c.classList.remove('on') }); btn.classList.add('on');
+      document.getElementById(prefix + '-from').value = ds(from);
+      document.getElementById(prefix + '-to').value = ds(to);
+      btn.parentElement.querySelectorAll('.adm-chip').forEach(function (c) { c.classList.remove('on') });
+      btn.classList.add('on');
+      console.log('[Filter] ' + prefix + ':' + period + ' | From: ' + ds(from) + ' To: ' + ds(to));
       if (prefix === 'aa') App.loadAdmAtt(); else if (prefix === 'av') App.loadAdmVis(); else if (prefix === 'apl') App.loadAdmPlans(); else App.loadAdmRpts();
     };
 
@@ -7795,14 +7928,31 @@
     App.loadAdmRpts = async function () {
       var emp = document.getElementById('ar-emp').value;
       var from = document.getElementById('ar-from').value, to = document.getElementById('ar-to').value;
-      if (!from || !to) return; showLoad('Loading Activity', 'Fetching data...'); document.getElementById('ar-empty').style.display = 'none'; document.getElementById('ar-cards').innerHTML = '';
+      if (!from || !to) {
+        console.warn('[loadAdmRpts] Missing date range: from=' + from + ', to=' + to);
+        return;
+      }
+      showLoad('Loading Activity', 'Fetching data...');
+      document.getElementById('ar-empty').style.display = 'none';
+      document.getElementById('ar-cards').innerHTML = '';
       try {
-        var data = await F.g('reports'); var rows = [];
+        var data = await F.g('reports');
+        var rows = [];
+        console.log('[loadAdmRpts] Fetched reports, filtering: employee=' + emp + ', from=' + from + ', to=' + to);
+        var filteredCount = 0, totalCount = 0;
         if (data) {
           for (var k in data) {
-            var rec = data[k]; if (!rec || !rec.date) continue; var d = rec.date;
+            var rec = data[k];
+            if (!rec || !rec.date) continue;
+            var d = rec.date;
+            totalCount++;
             if (rec.type !== 'activity') continue;/* ACTIVITY ONLY */
-            if (d < from || d > to) continue; if (emp !== 'all' && rec.userId !== emp) continue;
+            if (d < from || d > to) {
+              console.debug('[loadAdmRpts] Record ' + k + ' date ' + d + ' outside range [' + from + ',' + to + ']');
+              continue;
+            }
+            if (emp !== 'all' && rec.userId !== emp) continue;
+            filteredCount++;
             var isLate = rec.lateReport === true || (rec.ts && rec.date && rec.ts.slice(0, 10) !== rec.date);
             rows.push({
               id: k, date: d, time: rec.time || '-', uid: rec.userId || '', name: rec.userName || '', type: 'activity', message: rec.message || '',
@@ -7810,7 +7960,9 @@
             })
           }
         }
-        _admRptRows = rows; rows.sort(function (a, b) { return a.date > b.date ? -1 : a.date < b.date ? 1 : (b.time || '').localeCompare(a.time || '') });
+        _admRptRows = rows;
+        console.log('[loadAdmRpts] Summary: totalRecords=' + totalCount + ', activityRecords=' + filteredCount + ', matchedRange=' + rows.length);
+        rows.sort(function (a, b) { return a.date > b.date ? -1 : a.date < b.date ? 1 : (b.time || '').localeCompare(a.time || '') });
         /* Missing reporters detection */
         var users = F.arr(await F.g('users')).filter(function (u) { return u.approved === true && u.blocked !== true });
         var todayStr = U.dedCutoff();
@@ -7848,7 +8000,13 @@
           document.getElementById('ar-missing-names').innerHTML = missingToday.map(function (n) { return '❌ ' + n }).join('<br>')
         }
         else { document.getElementById('ar-missing-alert').style.display = 'none' }
-        if (!rows.length) { document.getElementById('ar-empty').style.display = 'block'; hideLoad(); return }
+        if (!rows.length) {
+          var empLabel = document.getElementById('ar-emp').options[document.getElementById('ar-emp').selectedIndex].text;
+          document.getElementById('ar-empty').innerHTML = '<div style="padding:20px;text-align:center"><div style="font-size:12px;color:var(--G5);margin-bottom:8px">📭 No activity reports found</div><div style="font-size:11px;color:var(--G6)">Period: ' + from + ' to ' + to + '<br>Employee: ' + empLabel + '</div><div style="font-size:10px;color:var(--G7);margin-top:8px">Try selecting a different date range or employee</div></div>';
+          document.getElementById('ar-empty').style.display = 'block';
+          hideLoad();
+          return;
+        }
         /* Tag cloud */
         var tagMap = {}; rows.forEach(function (r) { var ta = Array.isArray(r.tags) ? r.tags : []; ta.forEach(function (t) { tagMap[t] = (tagMap[t] || 0) + 1 }) });
         var tagArr = Object.entries(tagMap).sort(function (a, b) { return b[1] - a[1] }).slice(0, 15);
@@ -8391,6 +8549,54 @@
       U.toast('Excel Downloaded', 'ok');
     };
 
+    /* Quick download by period */
+    App.dlAdmRptByPeriod = async function (period, format) {
+      try {
+        var periodLabels = { 'week': 'This Week', 'month': 'This Month', 'lastmonth': 'Last Month' };
+        var periodLabel = periodLabels[period] || period;
+        showLoad('Preparing', 'Loading ' + periodLabel + ' data...');
+
+        var now = new Date(), from, to = new Date();
+        if (period === 'week') {
+          from = new Date(now);
+          var d = now.getDay();
+          from.setDate(now.getDate() - (d === 0 ? 6 : d - 1));
+        }
+        else if (period === 'month') {
+          from = new Date(now.getFullYear(), now.getMonth(), 1);
+        }
+        else if (period === 'lastmonth') {
+          from = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+          to = new Date(now.getFullYear(), now.getMonth(), 0);
+        }
+
+        var ds = function (d) {
+          return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')
+        };
+
+        document.getElementById('ar-from').value = ds(from);
+        document.getElementById('ar-to').value = ds(to);
+        console.log('[dlAdmRptByPeriod] ' + periodLabel + ': ' + ds(from) + ' to ' + ds(to));
+
+        await App.loadAdmRpts();
+
+        if (!_admRptRows || !_admRptRows.length) {
+          hideLoad();
+          U.toast('No data found for ' + periodLabel, 'warn');
+          return;
+        }
+
+        hideLoad();
+        if (format === 'pdf') { App.dlAdmRptPdf(); }
+        else if (format === 'excel') { App.dlAdmRptExcel(); }
+        U.toast(periodLabel + ' exported to ' + format.toUpperCase(), 'ok');
+      } catch (e) {
+        hideLoad();
+        U.toast('Error: ' + e.message, 'err');
+        console.error('dlAdmRptByPeriod:', e);
+      }
+    };
+
     App.dlAdmRptPdf = function () {
       if (!_admRptRows.length) { alert('No data'); return }
       var J = window.jspdf; var doc = new J.jsPDF('p', 'mm', 'a4');
@@ -8653,6 +8859,315 @@
       XLSX.utils.book_append_sheet(wb, ws, 'Reports');
       XLSX.writeFile(wb, 'Sales_Intelligence_' + from + '_to_' + to + '.xlsx');
       U.toast('Excel Downloaded', 'ok');
+    };
+
+    /* ═══ ACTIVITY DETAILS REPORT ═══ */
+    var _actDetailsRows = [];
+    var _actDetailsFiltered = [];
+    var _actDetailsPage = 0;
+
+    App.loadActDetails = async function () {
+      var emp = document.getElementById('ad-emp').value;
+      var from = document.getElementById('ad-from').value, to = document.getElementById('ad-to').value;
+      if (!from || !to) {
+        console.warn('[loadActDetails] Missing date range');
+        return;
+      }
+      showLoad('Loading Activities', 'Fetching detailed activity records...');
+      document.getElementById('ad-empty').style.display = 'none';
+      document.getElementById('ad-tbody').innerHTML = '';
+
+      try {
+        var data = await F.g('reports');
+        var rows = [];
+        console.log('[loadActDetails] Filtering: employee=' + emp + ', from=' + from + ', to=' + to);
+
+        if (data && typeof data === 'object') {
+          for (var k in data) {
+            try {
+              var rec = data[k];
+              if (!rec) continue;
+
+              // Check if this is an activity record
+              var recType = rec.type || '';
+              if (recType !== 'activity') continue;
+
+              var d = rec.date || '';
+              if (!d || d < from || d > to) continue;
+
+              if (emp !== 'all' && rec.userId !== emp) continue;
+
+              var isLate = rec.lateReport === true || (rec.ts && rec.date && rec.ts.slice(0, 10) !== rec.date);
+              var msgText = (rec.message && typeof rec.message === 'string') ? rec.message : (rec.message ? rec.message.toString() : '');
+              var tagsArray = Array.isArray(rec.tags) ? rec.tags : (rec.tags ? [rec.tags] : []);
+
+              rows.push({
+                id: k,
+                date: d,
+                time: rec.time || '-',
+                uid: rec.userId || '',
+                name: rec.userName || rec.name || '',
+                message: msgText,
+                tags: tagsArray,
+                lateReport: isLate,
+                reportLabel: rec.reportLabel || ''
+              });
+            } catch (itemErr) {
+              console.warn('[loadActDetails] Error processing record ' + k, itemErr);
+              continue;
+            }
+          }
+        }
+
+        _actDetailsRows = rows;
+        rows.sort(function (a, b) { return a.date > b.date ? -1 : a.date < b.date ? 1 : (b.time || '').localeCompare(a.time || '') });
+
+        /* Calculate stats */
+        var late = rows.filter(function (r) { return r.lateReport }).length;
+        var empSet = new Set(rows.map(function (r) { return r.uid }));
+        var tagSet = new Set();
+        rows.forEach(function (r) {
+          var ta = Array.isArray(r.tags) ? r.tags : [];
+          ta.forEach(function (t) { tagSet.add(t) });
+        });
+
+        document.getElementById('ad-tot').textContent = rows.length;
+        document.getElementById('ad-late').textContent = late;
+        document.getElementById('ad-unique-emp').textContent = empSet.size;
+        document.getElementById('ad-tags-count').textContent = tagSet.size;
+
+        if (!rows.length) {
+          var empLabel = document.getElementById('ad-emp').options[document.getElementById('ad-emp').selectedIndex].text;
+          document.getElementById('ad-empty').innerHTML = '<div style="padding:20px;text-align:center"><div style="font-size:12px;color:var(--G5);margin-bottom:8px">📭 No activity details found</div><div style="font-size:11px;color:var(--G6)">Period: ' + from + ' to ' + to + '<br>Employee: ' + empLabel + '</div></div>';
+          document.getElementById('ad-empty').style.display = 'block';
+          hideLoad();
+          return;
+        }
+
+        _actDetailsPage = 0;
+        App.filterActDetails();
+        hideLoad();
+      } catch (e) {
+        hideLoad();
+        console.error('loadActDetails:', e);
+        U.toast('Error loading activities: ' + e.message, 'err');
+      }
+    };
+
+    App.filterActDetails = function () {
+      var q = document.getElementById('ad-q').value.toLowerCase();
+      var filtered = _actDetailsRows.filter(function (r) {
+        if (!q) return true;
+        return r.name.toLowerCase().includes(q) ||
+               r.message.toLowerCase().includes(q) ||
+               (Array.isArray(r.tags) ? r.tags.join(' ').toLowerCase().includes(q) : false);
+      });
+      _actDetailsFiltered = filtered;
+      _actDetailsPage = 0;
+      document.getElementById('ad-showing').textContent = filtered.length + ' of ' + _actDetailsRows.length + ' activities';
+      App.moreActDetails();
+    };
+
+    App.moreActDetails = function () {
+      try {
+        var PAGE = 25;
+        var start = _actDetailsPage * PAGE;
+        var batch = _actDetailsFiltered.slice(start, start + PAGE);
+
+        if (!batch.length && start === 0) {
+          document.getElementById('ad-empty').style.display = 'block';
+          document.getElementById('ad-more').style.display = 'none';
+          return;
+        }
+        document.getElementById('ad-empty').style.display = 'none';
+
+        var html = '';
+        batch.forEach(function (r) {
+          try {
+            var msgStr = r.message || '';
+            if (typeof msgStr !== 'string') msgStr = msgStr.toString();
+
+            var tagHtml = Array.isArray(r.tags) && r.tags.length ?
+              r.tags.map(function (t) { return '<span style="background:var(--amb-bg);color:var(--amb);padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600;margin-right:3px">#' + (t || 'tag') + '</span>' }).join('') :
+              '<span style="color:var(--G6);font-size:9px">—</span>';
+
+            var lateHtml = r.lateReport ? '<span style="color:var(--R);font-weight:600">⏰ Late</span>' : '<span style="color:var(--grn);font-weight:600">✓ On Time</span>';
+            var msgPreview = msgStr.length > 60 ? msgStr.substring(0, 60) + '...' : msgStr;
+
+            html += '<tr style="border-bottom:1px solid var(--G8)">' +
+              '<td style="padding:10px;border-right:1px solid var(--G8);font-weight:600">' + (r.date || '') + '</td>' +
+              '<td style="padding:10px;border-right:1px solid var(--G8)">' + (r.time || '-') + '</td>' +
+              '<td style="padding:10px;border-right:1px solid var(--G8)">' + (r.name || 'Unknown') + '</td>' +
+              '<td style="padding:10px;border-right:1px solid var(--G8);max-width:200px;white-space:normal">' + msgPreview + '</td>' +
+              '<td style="padding:10px;border-right:1px solid var(--G8)">' + tagHtml + '</td>' +
+              '<td style="padding:10px">' + lateHtml + '</td>' +
+              '</tr>';
+          } catch (rowErr) {
+            console.warn('[moreActDetails] Error rendering row:', rowErr);
+          }
+        });
+
+        document.getElementById('ad-tbody').innerHTML = html;
+        _actDetailsPage++;
+
+        var more = document.getElementById('ad-more');
+        if (_actDetailsPage * PAGE < _actDetailsFiltered.length) {
+          more.style.display = 'block';
+          more.textContent = 'Load More (' + (_actDetailsFiltered.length - _actDetailsPage * PAGE) + ' remaining) ↓';
+        } else {
+          more.style.display = 'none';
+        }
+      } catch (e) {
+        console.error('[moreActDetails] Error:', e);
+        U.toast('Error rendering activities: ' + e.message, 'err');
+      }
+    };
+
+    /* Download Activity Details as PDF */
+    App.dlActDetailsPdf = function () {
+      if (!_actDetailsRows || !_actDetailsRows.length) { U.toast('No data to download', 'warn'); return; }
+      try {
+        var J = window.jspdf;
+        if (!J || !J.jsPDF) { U.toast('PDF library not available', 'err'); return; }
+
+        var doc = new J.jsPDF('p', 'mm', 'a4');
+        var from = document.getElementById('ad-from').value || '', to = document.getElementById('ad-to').value || '';
+        var empSel = document.getElementById('ad-emp');
+        var empLabel = empSel && empSel.options && empSel.options[empSel.selectedIndex] ? empSel.options[empSel.selectedIndex].text : 'All Employees';
+
+        /* Header */
+        doc.setFillColor(26, 26, 26);
+        doc.rect(0, 0, 210, 28, 'F');
+        doc.setFillColor(185, 28, 28);
+        doc.rect(0, 26, 210, 2, 'F');
+        doc.setTextColor(255);
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('ACTIVITY DETAILS REPORT', 14, 12);
+        doc.setFontSize(8);
+        doc.setFont(undefined, 'normal');
+        doc.setTextColor(180, 180, 180);
+        doc.text('Cognitive Solutions Pvt Ltd', 14, 18);
+        doc.setFontSize(7);
+        doc.text(empLabel + ' | ' + from + ' to ' + to, 196, 12, { align: 'right' });
+        doc.text('Generated: ' + new Date().toLocaleString('en-GB'), 196, 18, { align: 'right' });
+
+        var y = 32;
+        var rows = _actDetailsRows;
+
+        /* Summary stats */
+        doc.setFontSize(9);
+        doc.setFont(undefined, 'bold');
+        doc.setTextColor(30, 30, 30);
+        var lateCount = rows.filter(function (r) { return r.lateReport }).length;
+        doc.text('Summary: ' + rows.length + ' activities | ' + lateCount + ' late submissions', 14, y);
+        y += 8;
+
+        /* Table data */
+        var tableRows = rows.map(function (r) {
+          var msgStr = r.message || '';
+          if (typeof msgStr !== 'string') msgStr = msgStr.toString();
+          var tags = Array.isArray(r.tags) ? r.tags.join(', ') : '';
+          var msgShort = msgStr.substring(0, 80);
+          return [r.date || '', r.time || '', r.name || '', msgShort, tags, r.lateReport ? 'Late' : 'On Time'];
+        });
+
+        doc.autoTable({
+          startY: y,
+          head: [['Date', 'Time', 'Employee', 'Activity', 'Tags', 'Status']],
+          body: tableRows,
+          theme: 'grid',
+          headStyles: { fillColor: [185, 28, 28], textColor: 255, fontSize: 8, fontStyle: 'bold', cellPadding: 2.5 },
+          bodyStyles: { fontSize: 7, cellPadding: 2 },
+          columnStyles: {
+            0: { cellWidth: 18 }, 1: { cellWidth: 12 }, 2: { cellWidth: 28 },
+            3: { cellWidth: 80 }, 4: { cellWidth: 35 }, 5: { cellWidth: 18 }
+          },
+          margin: { left: 10, right: 10 }
+        });
+
+        doc.save('Activity_Details_' + from + '_to_' + to + '.pdf');
+        U.toast('Activity Details PDF Downloaded', 'ok');
+      } catch (e) {
+        U.toast('Error generating PDF: ' + e.message, 'err');
+        console.error('dlActDetailsPdf:', e);
+      }
+    };
+
+    /* Download Activity Details as Excel */
+    App.dlActDetailsExcel = function () {
+      if (!_actDetailsRows || !_actDetailsRows.length) { U.toast('No data to download', 'warn'); return; }
+      try {
+        var from = document.getElementById('ad-from').value, to = document.getElementById('ad-to').value;
+        var rows = _actDetailsRows;
+
+        var wb = XLSX.utils.book_new();
+        var wsData = [['Date', 'Time', 'Employee', 'Activity Details', 'Tags', 'Status', 'Late']];
+
+        rows.forEach(function (r) {
+          try {
+            var msgStr = r.message || '';
+            if (typeof msgStr !== 'string') msgStr = msgStr.toString();
+            var tags = Array.isArray(r.tags) ? r.tags.join(', ') : '';
+            var status = r.lateReport ? 'Late' : 'On Time';
+            wsData.push([
+              r.date || '',
+              r.time || '',
+              r.name || '',
+              msgStr.substring(0, 300),
+              tags,
+              status,
+              r.lateReport ? 'Yes' : 'No'
+            ]);
+          } catch (rowErr) {
+            console.warn('Error processing row for Excel:', rowErr);
+          }
+        });
+
+        var ws = XLSX.utils.aoa_to_sheet(wsData);
+        ws['!cols'] = [{wch: 14}, {wch: 10}, {wch: 18}, {wch: 50}, {wch: 25}, {wch: 12}, {wch: 8}];
+        XLSX.utils.book_append_sheet(wb, ws, 'Activities');
+        XLSX.writeFile(wb, 'Activity_Details_' + from + '_to_' + to + '.xlsx');
+        U.toast('Activity Details Excel Downloaded', 'ok');
+      } catch (e) {
+        U.toast('Error generating Excel: ' + e.message, 'err');
+        console.error('dlActDetailsExcel:', e);
+      }
+    };
+
+    /* Download Activity Details as CSV */
+    App.dlActDetailsCSV = function () {
+      if (!_actDetailsRows || !_actDetailsRows.length) { U.toast('No data to download', 'warn'); return; }
+      try {
+        var from = document.getElementById('ad-from').value, to = document.getElementById('ad-to').value;
+        var rows = _actDetailsRows;
+
+        var csv = 'Date,Time,Employee,Activity Details,Tags,Status,Late\n';
+        rows.forEach(function (r) {
+          try {
+            var msgStr = r.message || '';
+            if (typeof msgStr !== 'string') msgStr = msgStr.toString();
+            var tags = Array.isArray(r.tags) ? r.tags.join('; ') : '';
+            var status = r.lateReport ? 'Late' : 'On Time';
+            var msg = msgStr.replace(/"/g, '""').substring(0, 300);
+            csv += '"' + (r.date || '') + '","' + (r.time || '') + '","' + (r.name || '') + '","' + msg + '","' + tags + '","' + status + '","' + (r.lateReport ? 'Yes' : 'No') + '"\n';
+          } catch (rowErr) {
+            console.warn('Error processing row for CSV:', rowErr);
+          }
+        });
+
+        var blob = new Blob([csv], { type: 'text/csv' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'Activity_Details_' + from + '_to_' + to + '.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+        U.toast('Activity Details CSV Downloaded', 'ok');
+      } catch (e) {
+        U.toast('Error generating CSV: ' + e.message, 'err');
+        console.error('dlActDetailsCSV:', e);
+      }
     };
 
 
